@@ -1,4 +1,6 @@
 (define (count-atoms l)
+  ; count the number of atoms in an expression.
+  ; eg (count-atoms '(a (b) c)) = 3
   (cond ((null? l) 0)
 	((pair? l) (+ (count-atoms (car l))
 		      (count-atoms (cdr l))))
