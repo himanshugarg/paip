@@ -1,11 +1,11 @@
-(define (append2 l1 l2)
+(define (append l1 l2)
   (if (null? l1)
       l2
-      (cons (car l1) (append2 (cdr l1) l2)))) 
+      (cons (car l1) (append (cdr l1) l2))))
 
-(define (sentence) (append2 (noun-phrase) (verb-phrase)))
-(define (noun-phrase) (append2 (article) (noun)))
-(define (verb-phrase) (append2 (verb) (noun-phrase)))
+(define (sentence) (append (noun-phrase) (verb-phrase)))
+(define (noun-phrase) (append (article) (noun)))
+(define (verb-phrase) (append (verb) (noun-phrase)))
 (define (article) (one-of '(the a)))
 (define (noun) (one-of '(man ball woman table)))
 (define (verb) (one-of '(hit took saw liked)))
