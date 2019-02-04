@@ -1,0 +1,5 @@
+(let ((n (remainder (read) 10)))
+     (if (> n 0)
+         (begin (write 1) (newline) (write n))
+         (write 2)))
+(newline)
