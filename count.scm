@@ -7,4 +7,7 @@
 		       (count-expr e1 (cdr e2))))
 	(else 0)))
 
-(count-expr 'a '(a (a ((a) b) a)))
+(eq? 4 (count-expr 'a '(a (a ((a) b) a))))
+(eq? 0 (count-expr 'a ()))
+(eq? 1 (count-expr 'a 'a))
+(eq? 1 (count-expr 'a '((((((((a))))))))))

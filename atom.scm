@@ -6,6 +6,7 @@
 		      (count-atoms (cdr l))))
 	 (else 1)))
 
-(count-atoms '(1 (2 3) 4 (4 5)))
+(eq? 6 (count-atoms '(1 (2 3) 4 (4 5))))
+(eq? 0 (count-atoms ()))
 
 
