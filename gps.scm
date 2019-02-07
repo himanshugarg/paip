@@ -47,6 +47,7 @@
   ;; print a message and update *state* if op is applicable
     (if (every achieve (op-preconds op))
 	(begin (display (list 'executing (op-action op)))
+	       (newline)
 	       (set! state (set-difference state (op-delete-list op)))
 	       (set! state (set-union state (op-add-list op))))))
   (define (achieve goal)
@@ -70,21 +71,29 @@
 	    (son-at-home))          ; del-list
 	   (shop-installs-battery
 	    (car-needs-battery shop-knows-problem shop-has-money)
-	    (car-works))
+	    (car-works)
+	    ())
 	   (tell-shop-problem
 	    (in-communication-with-shop)
-	    (shop-knows-problem))
+	    (shop-knows-problem)
+	    ())
 	   (telephone-shop
 	    (know-phone-number)
-	    (in-communication-with-shop))
+	    (in-communication-with-shop)
+	    ())
 	   (look-up-number
 	    (have-phone-book)
-	   (know-phone-number))
+	    (know-phone-number)
+	    ())
 	   (give-shop-money
 	    (have-money)
 	    (shop-has-money)
 	    (have-money))))
 
 (GPS '(son-at-home car-needs-battery have-money have-phone-book)
+     '(son-at-school)
+     *school-ops*)
+
+(GPS '(son-at-home)
      '(son-at-school)
      *school-ops*)
