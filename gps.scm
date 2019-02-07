@@ -1,7 +1,3 @@
-(define (*state*) '())
-
-(define (*ops*) '())
-
 (define (every test? lst)
   (cond ((null? lst) #t)
 	((test? (car lst)) (every test? (cdr lst)))
@@ -38,7 +34,7 @@
   (car op))
 
 (define (op-preconds op)
-  (cadr op)
+  (cadr op))
   
 (define (op-add-list op)
   (caddr op))
@@ -46,34 +42,49 @@
 (define (op-delete-list op)
   (cadddr op))
 
-(set-union '(1 2) '(1 2 3 4 5))
-(set-difference '(1 2) '(3 4 5))
-(every (lambda (a) (> a 1)) '(2 1 4))
-(member? '5 '(1 2 3 4))
-(some (lambda (a) (> a 1)) '(1 1 1))
-(find-all (lambda (dummy a) (> a 4)) #t '(1 2 3 4))
-
-(define (GPS goals *ops*)
-  ;; General Proplem Solver: achieve all goals using *ops*
-  (if (every achieve goals) 'solved))
-
-(define (achieve goal)
+(define (GPS state goals ops)
+  (define (apply-operator op)
+  ;; print a message and update *state* if op is applicable
+    (if (every achieve (op-preconds op))
+	(begin (display (list 'executing (op-action op)))
+	       (set! state (set-difference state (op-delete-list op)))
+	       (set! state (set-union state (op-add-list op))))))
+  (define (achieve goal)
   ;; a goal is achieved if it already holds
   ;; or if there is an appropriate op for it that is applicable
-  (or (member? goal *state*)
-      (some op-apply
-	    (find-all *ops* op-appropriate? goal))))
+    (or (member? goal state)
+	(some apply-operator
+	      (find-all op-appropriate? goal ops))))
+  ;; General Proplem Solver: achieve all goals using *ops*
+  (if (every achieve goals) 'solved))
 
 (define (op-appropriate? goal op)
   ;; an op is appropriate to a goal if it is in its add list
   (member? goal (op-add-list op)))
 
-(define (apply-operator op)
-  ;; print a message and update *state* if op is applicable
-  (when (every achieve (op-preconds op))
-	(print (list 'executing (op-action op)))
-	(setf! *state* (set-difference *state* (op-delete-list op)))
-	(setf! *state* (set-union *state* (op-add-list op)))
-	t))
 
+(define *school-ops*
+	 '((drive-son-to-school
+	    (son-at-home car-works) ; preconds
+	    (son-at-school)         ; add-list	   
+	    (son-at-home))          ; del-list
+	   (shop-installs-battery
+	    (car-needs-battery shop-knows-problem shop-has-money)
+	    (car-works))
+	   (tell-shop-problem
+	    (in-communication-with-shop)
+	    (shop-knows-problem))
+	   (telephone-shop
+	    (know-phone-number)
+	    (in-communication-with-shop))
+	   (look-up-number
+	    (have-phone-book)
+	   (know-phone-number))
+	   (give-shop-money
+	    (have-money)
+	    (shop-has-money)
+	    (have-money))))
 
+(GPS '(son-at-home car-needs-battery have-money have-phone-book)
+     '(son-at-school)
+     *school-ops*)
