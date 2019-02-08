@@ -42,6 +42,10 @@
 (define (op-delete-list op)
   (cadddr op))
 
+(define (op-appropriate? goal op)
+  ;; an op is appropriate to a goal if it is in its add list
+  (member? goal (op-add-list op)))
+
 (define (GPS state goals ops)
   (define (apply-operator op)
   ;; print a message and update *state* if op is applicable
@@ -58,11 +62,6 @@
 	      (find-all op-appropriate? goal ops))))
   ;; General Proplem Solver: achieve all goals using *ops*
   (if (every achieve goals) 'solved))
-
-(define (op-appropriate? goal op)
-  ;; an op is appropriate to a goal if it is in its add list
-  (member? goal (op-add-list op)))
-
 
 (define *school-ops*
 	 '((drive-son-to-school
